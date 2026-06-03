@@ -1,0 +1,88 @@
+.vh-page {
+  min-height: 100vh;
+  background: #fff;
+}
+.vh-stage {
+  height: 100vh;
+}
+.vh-pin {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* faint static accent rings behind the text */
+.vh-accent {
+  position: absolute;
+  z-index: 0;
+  width: min(46vh, 440px);
+  opacity: 0.05;
+}
+.vh-accent svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vh-headline {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-content);
+}
+.vh-line1 {
+  font-size: clamp(32px, 5.4vw, 70px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #0f0f12;
+  line-height: 1.05;
+}
+
+/* the star word: two stacked copies, outline + clipped solid */
+.vh-word-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 1.05;
+}
+.vh-word {
+  font-size: clamp(38px, 6.6vw, 86px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.vh-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.4px #c2c2cb;
+  text-stroke: 1.4px #c2c2cb;
+}
+/* solid copy sits exactly on top, revealed/hidden via clip-path */
+.vh-solid {
+  position: absolute;
+  inset: 0;
+  color: #0f0f12;
+  -webkit-text-stroke: 1.4px #0f0f12;
+  clip-path: inset(0 100% 0 0); /* start fully hidden */
+}
+
+.vh-hint {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--grey);
+}

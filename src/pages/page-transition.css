@@ -1,0 +1,56 @@
+.pt-page { position: relative; height: 100vh; overflow: hidden; }
+.pt-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.pt-scene-eyebrow {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.pt-scene-name {
+  font-family: var(--font-ui);
+  font-size: clamp(48px, 10vw, 130px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 12px 0 0;
+}
+.pt-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 5;
+  padding: 26px;
+  text-align: center;
+  background: linear-gradient(0deg, rgba(0,0,0,0.45), transparent);
+  color: #fff;
+}
+.pt-controls p { font-family: var(--font-content); font-size: 15px; margin: 10px 0 16px; opacity: 0.9; }
+.pt-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.pt-btns button {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f0f12;
+  background: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 22px;
+  cursor: pointer;
+}
+.pt-btns button:hover { background: #ece9fb; }
+
+.pt-overlay { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+.pt-panel {
+  position: absolute;
+  inset: 0;
+  display: none;
+  will-change: transform;
+}

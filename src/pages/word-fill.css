@@ -1,0 +1,49 @@
+.wf-page {
+  min-height: 100vh;
+}
+.wf-stage {
+  height: 100vh;
+}
+.wf-inner {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+.wf-sentence {
+  width: min(980px, 92vw);
+  text-align: center;
+  font-size: clamp(30px, 5.2vw, 64px);
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  margin: 0;
+}
+.wf-word {
+  position: relative;
+  color: #cfcfd8;
+  transition: none;
+}
+/* icon floats centered above its anchor word */
+.wf-icon-slot {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  opacity: 0;
+  pointer-events: none;
+}
+.wf-icon {
+  display: block;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.16));
+}
+.wf-hint {
+  margin-top: 56px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey);
+}

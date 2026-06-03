@@ -1,0 +1,103 @@
+.dz-page { min-height: 100vh; background: #07070a; }
+.dz-stage { height: 100vh; }
+.dz-pin {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  background: #07070a;
+}
+
+.dz-sky {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(180deg, #4f8ff7 0%, #9ec5fb 42%, #ffd9b3 78%, #ffc59e 100%);
+  overflow: hidden;
+}
+.dz-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.55;
+  animation: dz-drift 9s ease-in-out infinite;
+}
+.dz-blob.b1 { width: 260px; height: 260px; background: #ff9ec4; left: 12%; top: 22%; }
+.dz-blob.b2 { width: 320px; height: 320px; background: #ffd29e; right: 10%; bottom: 14%; animation-delay: 2s; }
+@keyframes dz-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(24px, -30px); }
+}
+
+.dz-deck {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  z-index: 4;
+}
+.dz-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 280px;
+  margin: -140px 0 0 -100px;
+  border-radius: 18px;
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  will-change: transform;
+}
+.dz-card-dot { display: block; width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,0.85); }
+.dz-card-line { display: block; height: 9px; border-radius: 5px; background: rgba(255,255,255,0.55); margin-top: 16px; }
+.dz-card-line.short { width: 60%; }
+
+.dz-greeting {
+  position: relative;
+  z-index: 7;
+  width: min(820px, 88vw);
+  text-align: center;
+  font-family: var(--font-content);
+  font-size: clamp(26px, 4.2vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+  margin: 0;
+}
+.dz-greeting span { color: rgba(255, 255, 255, 0.32); }
+.dz-ico { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+
+.dz-email {
+  position: absolute;
+  z-index: 7;
+  bottom: 70px;
+  left: 50%;
+  transform: translate(-50%, 120px);
+  opacity: 0;
+  width: min(420px, 84vw);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 24px 50px -22px rgba(0, 0, 0, 0.5);
+}
+.dz-email-from { font-family: var(--font-ui); font-weight: 700; font-size: 14px; color: var(--ink); }
+.dz-email-subj { font-family: var(--font-content); font-size: 13px; color: var(--grey-text); }
+
+.dz-hint {
+  position: absolute;
+  z-index: 7;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
