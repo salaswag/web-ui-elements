@@ -25,6 +25,7 @@ import MagneticButton from './pages/MagneticButton.jsx'
 import PageTransition from './pages/PageTransition.jsx'
 import GyroParallax from './pages/GyroParallax.jsx'
 import TiltShimmer from './pages/TiltShimmer.jsx'
+import ExtHost from './pages/ExtHost.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -49,6 +50,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/page-transition" element={<PageTransition />} />
         <Route path="/gyro-parallax" element={<GyroParallax />} />
         <Route path="/tilt-shimmer" element={<TiltShimmer />} />
+        <Route path="/x/:id" element={<ExtHost />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>,

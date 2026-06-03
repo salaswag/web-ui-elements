@@ -384,366 +384,156 @@ iOS 13+ permission button as above.`,
 
   // ============================================================
   // EXTERNAL — curated open-source effects from other creators.
-  // Marked source:'external' (teal accent + "External" tag), code-only (no live route).
-  // Code snippets are minimal ILLUSTRATIVE implementations — see each source for the real,
-  // full component. Links are to the project home; verify before shipping.
+  // The 'live:true' ones are clean REIMPLEMENTATIONS you can SEE (live preview) and copy
+  // (real source file shown under "View code"). The 'live:false' ones are libraries you
+  // install — shown with real install/usage code + a link. All attributed to their source.
   // ============================================================
-  {
-    id: 'ext-aceternity-3dcard', num: '↗', source: 'external', live: false,
-    title: '3D Card Effect', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
-    blurb: 'Card that tilts in 3D toward the cursor, children lift on the Z axis.',
-    complexity: 'mod', platform: 'desktop', categories: ['Cards / Layout'],
-    code: [{ file: 'ThreeDCard.jsx', content: `// Illustrative — full version: ui.aceternity.com (Framer Motion)
-function ThreeDCard({ children }) {
-  const ref = useRef(null)
-  const onMove = (e) => {
-    const r = ref.current.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width - 0.5
-    const y = (e.clientY - r.top) / r.height - 0.5
-    ref.current.style.transform =
-      \`rotateY(\${x * 16}deg) rotateX(\${-y * 16}deg)\`
-  }
-  return (
-    <div style={{ perspective: 1000 }} onMouseMove={onMove}
-         onMouseLeave={() => (ref.current.style.transform = '')}>
-      <div ref={ref} style={{ transition: 'transform .15s', transformStyle: 'preserve-3d' }}>
-        {children}
-      </div>
-    </div>
-  )
-}` }],
-  },
-  {
-    id: 'ext-aceternity-spotlight', num: '↗', source: 'external', live: false,
+  { id: 'ext-spotlight', num: '↗', source: 'external', live: true, ext: 'spotlight', route: '/x/spotlight',
     title: 'Spotlight', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
-    blurb: 'A soft radial spotlight that follows the cursor across a dark hero.',
+    blurb: 'A soft radial glow that follows the cursor across a dark hero.',
     complexity: 'easy', platform: 'desktop', categories: ['Hero / Header'],
-    code: [{ file: 'spotlight.css', content: `/* Illustrative — see ui.aceternity.com */
-.spotlight { position: relative; background: #0b0b12; overflow: hidden; }
-.spotlight::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(400px circle at var(--mx) var(--my),
-    rgba(124,58,237,.25), transparent 60%);
-}
-/* JS: el.style.setProperty('--mx', e.clientX+'px') on mousemove */` }],
-  },
-  {
-    id: 'ext-aceternity-beams', num: '↗', source: 'external', live: false,
-    title: 'Background Beams', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
-    blurb: 'Animated gradient SVG beams sweeping behind hero content.',
-    complexity: 'mod', platform: 'desktop', categories: ['Hero / Header'],
-    code: [{ file: 'Beams.jsx', content: `// Illustrative — see ui.aceternity.com (animated SVG paths)
-const Beams = () => (
-  <svg className="beams" width="100%" height="100%">
-    {Array.from({ length: 12 }).map((_, i) => (
-      <path key={i} d={\`M\${i*80} 0 Q\${i*80+40} 300 \${i*80} 600\`}
-        stroke="url(#g)" fill="none" strokeWidth="1">
-        <animate attributeName="stroke-dashoffset" values="200;0" dur="3s" repeatCount="indefinite"/>
-      </path>
-    ))}
-  </svg>
-)` }],
-  },
-  {
-    id: 'ext-aceternity-textgen', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · CSS radial-gradient + mousemove' },
+  { id: 'ext-3dcard', num: '↗', source: 'external', live: true, ext: 'three-d-card', route: '/x/three-d-card',
+    title: '3D Card Effect', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
+    blurb: 'Card tilts toward the cursor; inner layers lift on the Z axis.',
+    complexity: 'mod', platform: 'desktop', categories: ['Cards / Layout'],
+    library: 'Reimplementation · perspective + rotateX/Y' },
+  { id: 'ext-textgen', num: '↗', source: 'external', live: true, ext: 'text-generate', route: '/x/text-generate',
     title: 'Text Generate Effect', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
-    blurb: 'Headline words fade + blur in one after another on mount.',
+    blurb: 'Headline words fade + rise in sequence on mount.',
     complexity: 'easy', platform: 'any', categories: ['Text Effect'],
-    code: [{ file: 'TextGenerate.jsx', content: `// Illustrative — see ui.aceternity.com (Framer Motion stagger)
-import { motion } from 'framer-motion'
-const TextGenerate = ({ text }) => (
-  <p>{text.split(' ').map((w, i) => (
-    <motion.span key={i} initial={{ opacity: 0, filter: 'blur(8px)' }}
-      animate={{ opacity: 1, filter: 'blur(0)' }} transition={{ delay: i * 0.08 }}>
-      {w}{' '}
-    </motion.span>
-  ))}</p>
-)` }],
-  },
-  {
-    id: 'ext-aceternity-movingcards', num: '↗', source: 'external', live: false,
-    title: 'Infinite Moving Cards', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
-    blurb: 'A seamless looping marquee of testimonial cards.',
-    complexity: 'easy', platform: 'any', categories: ['Photo / Gallery', 'Global / Add-anywhere'],
-    code: [{ file: 'marquee.css', content: `/* Illustrative — duplicate the track for a seamless loop */
-.track { display: flex; gap: 16px; width: max-content; animation: scroll 30s linear infinite; }
-@keyframes scroll { to { transform: translateX(-50%); } }
-/* render items twice inside .track */` }],
-  },
-  {
-    id: 'ext-aceternity-lamp', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · staggered CSS animation' },
+  { id: 'ext-lamp', num: '↗', source: 'external', live: true, ext: 'lamp', route: '/x/lamp',
     title: 'Lamp Effect', author: 'Aceternity UI', sourceUrl: 'https://ui.aceternity.com',
     blurb: 'A conic “lamp” glow that blooms behind a heading.',
     complexity: 'mod', platform: 'desktop', categories: ['Hero / Header'],
-    code: [{ file: 'lamp.css', content: `/* Illustrative — see ui.aceternity.com */
-.lamp { background: conic-gradient(from 90deg at 50% 0,
-  transparent, rgba(124,58,237,.7), transparent); filter: blur(40px); height: 220px; }` }],
-  },
-  {
-    id: 'ext-magicui-marquee', num: '↗', source: 'external', live: false,
-    title: 'Marquee', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'Configurable horizontal/vertical infinite marquee with pause-on-hover.',
-    complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'Marquee.jsx', content: `// Illustrative — see magicui.design
-const Marquee = ({ children }) => (
-  <div className="mq" style={{ overflow: 'hidden' }}>
-    <div className="mq-row">{children}{children}</div>
-  </div>
-)
-/* .mq-row { display:flex; animation: mq 20s linear infinite }
-   .mq:hover .mq-row { animation-play-state: paused }
-   @keyframes mq { to { transform: translateX(-50%) } } */` }],
-  },
-  {
-    id: 'ext-magicui-borderbeam', num: '↗', source: 'external', live: false,
-    title: 'Border Beam', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'A light beam that travels around an element’s border.',
-    complexity: 'mod', platform: 'any', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'border-beam.css', content: `/* Illustrative — see magicui.design (uses offset-path) */
-.beam { position: absolute; inset: 0; border-radius: inherit; }
-.beam::after { content:''; position:absolute; width:40px; height:40px;
-  background: radial-gradient(circle, #7c3aed, transparent 60%);
-  offset-path: rect(0 100% 100% 0 round 16px); animation: beam 4s linear infinite; }
-@keyframes beam { to { offset-distance: 100%; } }` }],
-  },
-  {
-    id: 'ext-magicui-shimmer', num: '↗', source: 'external', live: false,
-    title: 'Shimmer Button', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'A button with a shimmering light sweeping across its surface.',
-    complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'shimmer.css', content: `/* Illustrative — see magicui.design */
-.shimmer { position: relative; overflow: hidden; }
-.shimmer::before { content:''; position:absolute; inset:0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.6), transparent 70%);
-  transform: translateX(-100%); animation: shimmer 2.5s infinite; }
-@keyframes shimmer { to { transform: translateX(100%); } }` }],
-  },
-  {
-    id: 'ext-magicui-animbeam', num: '↗', source: 'external', live: false,
-    title: 'Animated Beam', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'An SVG beam connecting two nodes with a moving gradient (integration diagrams).',
-    complexity: 'mod', platform: 'desktop', categories: ['Cards / Layout'],
-    code: [{ file: 'AnimatedBeam.jsx', content: `// Illustrative — see magicui.design (measures node positions, draws an SVG path)
-// <svg><path d={curveBetween(fromRect, toRect)} stroke="url(#grad)" />
-//   <linearGradient id="grad"><animate .../></linearGradient></svg>` }],
-  },
-  {
-    id: 'ext-magicui-meteors', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · conic-gradient + blur' },
+  { id: 'ext-meteors', num: '↗', source: 'external', live: true, ext: 'meteors', route: '/x/meteors',
     title: 'Meteors', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'Streaking meteors falling diagonally across a hero.',
+    blurb: 'Streaking meteors falling diagonally across a dark hero.',
     complexity: 'easy', platform: 'desktop', categories: ['Hero / Header'],
-    code: [{ file: 'meteors.css', content: `/* Illustrative — see magicui.design */
-.meteor { position:absolute; width:2px; height:2px; background:#fff; border-radius:50%;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1); animation: fall linear infinite; }
-.meteor::after { content:''; position:absolute; width:60px; height:1px;
-  background: linear-gradient(90deg,#fff, transparent); }
-@keyframes fall { to { transform: translate(-300px, 300px); opacity:0; } }` }],
-  },
-  {
-    id: 'ext-magicui-ticker', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · CSS keyframes' },
+  { id: 'ext-borderbeam', num: '↗', source: 'external', live: true, ext: 'border-beam', route: '/x/border-beam',
+    title: 'Border Beam', author: 'Magic UI', sourceUrl: 'https://magicui.design',
+    blurb: 'A light that travels around an element’s border.',
+    complexity: 'mod', platform: 'any', categories: ['Global / Add-anywhere'],
+    library: 'Reimplementation · conic-gradient spin' },
+  { id: 'ext-shimmer', num: '↗', source: 'external', live: true, ext: 'shimmer-button', route: '/x/shimmer-button',
+    title: 'Shimmer Button', author: 'Magic UI', sourceUrl: 'https://magicui.design',
+    blurb: 'A sheen of light sweeps across the button surface.',
+    complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere'],
+    library: 'Reimplementation · CSS sweep' },
+  { id: 'ext-marquee', num: '↗', source: 'external', live: true, ext: 'marquee', route: '/x/marquee',
+    title: 'Marquee', author: 'Magic UI', sourceUrl: 'https://magicui.design',
+    blurb: 'Seamless infinite scrolling row, pauses on hover.',
+    complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere', 'Photo / Gallery'],
+    library: 'Reimplementation · duplicated track + translateX' },
+  { id: 'ext-ticker', num: '↗', source: 'external', live: true, ext: 'number-ticker', route: '/x/number-ticker',
     title: 'Number Ticker', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'A number that counts up to its target when scrolled into view.',
+    blurb: 'Numbers count up to their target with easing.',
     complexity: 'easy', platform: 'any', categories: ['Text Effect'],
-    code: [{ file: 'NumberTicker.jsx', content: `// Illustrative — see magicui.design (uses spring + IntersectionObserver)
-function NumberTicker({ to }) {
-  const [n, setN] = useState(0)
-  useEffect(() => {
-    let raf, start
-    const step = (t) => { start ??= t; const p = Math.min((t - start) / 1200, 1)
-      setN(Math.floor(p * to)); if (p < 1) raf = requestAnimationFrame(step) }
-    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf)
-  }, [to])
-  return <span>{n.toLocaleString()}</span>
-}` }],
-  },
-  {
-    id: 'ext-magicui-ripple', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · requestAnimationFrame' },
+  { id: 'ext-ripple', num: '↗', source: 'external', live: true, ext: 'ripple', route: '/x/ripple',
     title: 'Ripple', author: 'Magic UI', sourceUrl: 'https://magicui.design',
-    blurb: 'Concentric expanding rings radiating from a center point.',
+    blurb: 'Concentric rings expanding from a center point.',
     complexity: 'easy', platform: 'any', categories: ['Hero / Header'],
-    code: [{ file: 'ripple.css', content: `/* Illustrative — see magicui.design */
-.ripple span { position:absolute; border:1px solid rgba(124,58,237,.3); border-radius:50%;
-  inset:0; margin:auto; animation: ripple 3s ease-out infinite; }
-.ripple span:nth-child(2){ animation-delay:.6s } .ripple span:nth-child(3){ animation-delay:1.2s }
-@keyframes ripple { from{ width:0;height:0;opacity:.8 } to{ width:600px;height:600px;opacity:0 } }` }],
-  },
-  {
-    id: 'ext-reactbits-splash', num: '↗', source: 'external', live: false,
-    title: 'Splash Cursor', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
-    blurb: 'A fluid, liquid trail that follows the cursor (WebGL).',
-    complexity: 'high', platform: 'desktop', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'note.md', content: `Illustrative note — full WebGL fluid sim at reactbits.dev (SplashCursor).
-It renders a fluid simulation to a canvas and advects dye based on pointer velocity.
-Copy the component from React Bits; it's ~1 file but shader-heavy.` }],
-  },
-  {
-    id: 'ext-reactbits-blurtext', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · CSS keyframes' },
+  { id: 'ext-blurtext', num: '↗', source: 'external', live: true, ext: 'blur-text', route: '/x/blur-text',
     title: 'Blur Text', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
-    blurb: 'Words animate from blurred + offset to sharp, word by word.',
+    blurb: 'Words animate from blurred + offset to sharp, one after another.',
     complexity: 'easy', platform: 'any', categories: ['Text Effect'],
-    code: [{ file: 'BlurText.jsx', content: `// Illustrative — see reactbits.dev
-const BlurText = ({ text }) => text.split(' ').map((w, i) => (
-  <span key={i} style={{ display:'inline-block', animation:\`blurin .6s \${i*0.08}s both\` }}>{w}&nbsp;</span>
-))
-/* @keyframes blurin { from{ filter:blur(8px); opacity:0; transform:translateY(8px) } } */` }],
-  },
-  {
-    id: 'ext-reactbits-aurora', num: '↗', source: 'external', live: false,
-    title: 'Aurora', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
-    blurb: 'Soft animated aurora ribbons as a full-bleed background.',
-    complexity: 'mod', platform: 'any', categories: ['Hero / Header'],
-    code: [{ file: 'aurora.css', content: `/* Illustrative — see reactbits.dev (often a shader; CSS approximation) */
-.aurora { background: linear-gradient(120deg,#5eead4,#818cf8,#c084fc); filter: blur(60px);
-  background-size: 200% 200%; animation: aurora 12s ease infinite; }
-@keyframes aurora { 0%,100%{ background-position:0 50% } 50%{ background-position:100% 50% } }` }],
-  },
-  {
-    id: 'ext-reactbits-magnet', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · per-word CSS animation' },
+  { id: 'ext-magnet', num: '↗', source: 'external', live: true, ext: 'magnet', route: '/x/magnet',
     title: 'Magnet', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
-    blurb: 'Wraps any element so it’s pulled toward the cursor within a radius.',
+    blurb: 'An element pulled toward the cursor, springs back on leave.',
     complexity: 'easy', platform: 'desktop', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'Magnet.jsx', content: `// Illustrative — see reactbits.dev (compare to our /magnetic-button)
-const Magnet = ({ children, strength = 0.4 }) => {
-  const ref = useRef(null)
-  const move = (e) => { const r = ref.current.getBoundingClientRect()
-    ref.current.style.transform = \`translate(\${(e.clientX-r.left-r.width/2)*strength}px,
-      \${(e.clientY-r.top-r.height/2)*strength}px)\` }
-  return <span ref={ref} onMouseMove={move}
-    onMouseLeave={() => (ref.current.style.transform='')}>{children}</span>
-}` }],
-  },
-  {
-    id: 'ext-reactbits-clickspark', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · transform follow + spring' },
+  { id: 'ext-clickspark', num: '↗', source: 'external', live: true, ext: 'click-spark', route: '/x/click-spark',
     title: 'Click Spark', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
     blurb: 'A burst of little sparks radiates from each click.',
     complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'note.md', content: `Illustrative — see reactbits.dev (ClickSpark).
-On click, draw N short lines from the point outward on a canvas, animating length+opacity to 0.` }],
-  },
-  {
-    id: 'ext-reactbits-starborder', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · WAAPI burst' },
+  { id: 'ext-aurora', num: '↗', source: 'external', live: true, ext: 'aurora', route: '/x/aurora',
+    title: 'Aurora', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
+    blurb: 'Soft animated aurora ribbons as a full-bleed background.',
+    complexity: 'mod', platform: 'any', categories: ['Hero / Header'],
+    library: 'Reimplementation · blurred animated gradients' },
+  { id: 'ext-starborder', num: '↗', source: 'external', live: true, ext: 'star-border', route: '/x/star-border',
     title: 'Star Border', author: 'React Bits', sourceUrl: 'https://reactbits.dev',
-    blurb: 'A button/box with a glowing star sweeping around the border.',
+    blurb: 'A glowing star sweeps around a button’s border.',
     complexity: 'easy', platform: 'any', categories: ['Global / Add-anywhere'],
-    code: [{ file: 'star-border.css', content: `/* Illustrative — see reactbits.dev */
-.star-border { position:relative; border-radius:14px; background:#0b0b12; }
-.star-border::before { content:''; position:absolute; inset:-2px; border-radius:inherit;
-  background: conic-gradient(from 0deg,#7c3aed,transparent 25%); animation: spin 3s linear infinite; z-index:-1; }
-@keyframes spin { to { transform: rotate(360deg); } }` }],
-  },
-  {
-    id: 'ext-gsap-scrolltrigger', num: '↗', source: 'external', live: false,
+    library: 'Reimplementation · conic-gradient spin' },
+  { id: 'ext-tilt', num: '↗', source: 'external', live: true, ext: 'tilt-glare', route: '/x/tilt-glare',
+    title: 'Tilt + Glare', author: 'vanilla-tilt.js', sourceUrl: 'https://micku7zu.github.io/vanilla-tilt.js/',
+    blurb: 'Smooth 3D tilt with a moving glare highlight (gyroscope-ready).',
+    complexity: 'easy', platform: 'any', categories: ['Motion / Device', 'Cards / Layout'],
+    library: 'Reimplementation · pointer-driven rotate + glare' },
+  { id: 'ext-reveal', num: '↗', source: 'external', live: true, ext: 'scroll-reveal', route: '/x/scroll-reveal',
+    title: 'On-Scroll Reveal', author: 'Codrops', sourceUrl: 'https://tympanus.net/codrops',
+    blurb: 'Blocks fade/slide in as they enter the viewport (no library).',
+    complexity: 'easy', platform: 'any', categories: ['Scroll-driven'],
+    library: 'Reimplementation · IntersectionObserver' },
+
+  // ---- libraries you install (real usage code + link; not a discrete visual to "preview") ----
+  { id: 'ext-gsap-scrolltrigger', num: '↗', source: 'external', live: false,
     title: 'ScrollTrigger Pin + Scrub', author: 'GSAP (GreenSock)', sourceUrl: 'https://gsap.com',
-    blurb: 'The core scroll-driven primitive: pin a section and scrub a timeline by scroll.',
-    complexity: 'mod', platform: 'any', categories: ['Scroll-driven'],
-    code: [{ file: 'pin.js', content: `// docs: gsap.com/docs/v3/Plugins/ScrollTrigger — free since Webflow acquisition
-gsap.registerPlugin(ScrollTrigger)
+    blurb: 'The core scroll-driven primitive — pin a section, scrub a timeline by scroll. Install GSAP.',
+    complexity: 'mod', platform: 'any', categories: ['Scroll-driven'], library: 'Library · npm i gsap',
+    code: [{ file: 'pin.js', content: `gsap.registerPlugin(ScrollTrigger)
 gsap.timeline({
   scrollTrigger: { trigger: '.section', start: 'top top', end: '+=1500', pin: true, scrub: true }
-}).to('.box', { x: 400, rotate: 90, ease: 'none' })` }],
-  },
-  {
-    id: 'ext-gsap-splittext', num: '↗', source: 'external', live: false,
+}).to('.box', { x: 400, rotate: 90, ease: 'none' })` }] },
+  { id: 'ext-gsap-splittext', num: '↗', source: 'external', live: false,
     title: 'SplitText Reveal', author: 'GSAP (GreenSock)', sourceUrl: 'https://gsap.com',
-    blurb: 'Split a heading into chars/words and stagger them in (SplitText is now free).',
-    complexity: 'easy', platform: 'any', categories: ['Text Effect'],
-    code: [{ file: 'split.js', content: `// docs: gsap.com/docs/v3/Plugins/SplitText
-const split = new SplitText('.title', { type: 'chars' })
-gsap.from(split.chars, { yPercent: 100, opacity: 0, stagger: 0.02, ease: 'back.out(2)' })` }],
-  },
-  {
-    id: 'ext-gsap-flip', num: '↗', source: 'external', live: false,
+    blurb: 'Split a heading into chars/words and stagger them in. SplitText is now free.',
+    complexity: 'easy', platform: 'any', categories: ['Text Effect'], library: 'Library · npm i gsap',
+    code: [{ file: 'split.js', content: `const split = new SplitText('.title', { type: 'chars' })
+gsap.from(split.chars, { yPercent: 100, opacity: 0, stagger: 0.02, ease: 'back.out(2)' })` }] },
+  { id: 'ext-gsap-flip', num: '↗', source: 'external', live: false,
     title: 'Flip (layout animation)', author: 'GSAP (GreenSock)', sourceUrl: 'https://gsap.com',
-    blurb: 'Animate elements smoothly between two layout states (grid ↔ list, etc.).',
-    complexity: 'mod', platform: 'any', categories: ['Cards / Layout'],
-    code: [{ file: 'flip.js', content: `// docs: gsap.com/docs/v3/Plugins/Flip
-const state = Flip.getState('.card')
-container.classList.toggle('list-view')   // mutate the DOM/layout
-Flip.from(state, { duration: 0.6, ease: 'power2.inOut', stagger: 0.04 })` }],
-  },
-  {
-    id: 'ext-lenis', num: '↗', source: 'external', live: false,
+    blurb: 'Animate elements smoothly between two layout states (grid ↔ list).',
+    complexity: 'mod', platform: 'any', categories: ['Cards / Layout'], library: 'Library · npm i gsap',
+    code: [{ file: 'flip.js', content: `const state = Flip.getState('.card')
+container.classList.toggle('list-view')
+Flip.from(state, { duration: 0.6, ease: 'power2.inOut', stagger: 0.04 })` }] },
+  { id: 'ext-lenis', num: '↗', source: 'external', live: false,
     title: 'Lenis Smooth Scroll', author: 'darkroom.engineering', sourceUrl: 'https://lenis.dev',
-    blurb: 'The 2026 industry-standard buttery momentum scrolling (3KB). Pairs with ScrollTrigger.',
-    complexity: 'easy', platform: 'any', categories: ['Scroll-driven', 'Global / Add-anywhere'],
-    code: [{ file: 'lenis.js', content: `// npm i lenis — github.com/darkroomengineering/lenis
-import Lenis from 'lenis'
+    blurb: 'Industry-standard buttery momentum scrolling (3KB). Global behavior — pairs with ScrollTrigger.',
+    complexity: 'easy', platform: 'any', categories: ['Scroll-driven', 'Global / Add-anywhere'], library: 'Library · npm i lenis',
+    code: [{ file: 'lenis.js', content: `import Lenis from 'lenis'
 const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
 function raf(t){ lenis.raf(t); requestAnimationFrame(raf) }
-requestAnimationFrame(raf)` }],
-  },
-  {
-    id: 'ext-codrops-reveal', num: '↗', source: 'external', live: false,
-    title: 'On-Scroll Reveal', author: 'Codrops', sourceUrl: 'https://tympanus.net/codrops',
-    blurb: 'Lightweight reveal-on-enter with IntersectionObserver (no library).',
-    complexity: 'easy', platform: 'any', categories: ['Scroll-driven'],
-    code: [{ file: 'reveal.js', content: `// pattern popularized by Codrops tutorials
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => e.isIntersecting && e.target.classList.add('in'))
-}, { threshold: 0.2 })
-document.querySelectorAll('.reveal').forEach(el => io.observe(el))
-/* .reveal{opacity:0;transform:translateY(24px);transition:.6s} .reveal.in{opacity:1;transform:none} */` }],
-  },
-  {
-    id: 'ext-codrops-imagetrail', num: '↗', source: 'external', live: false,
-    title: 'Image Trail', author: 'Codrops', sourceUrl: 'https://tympanus.net/codrops',
-    blurb: 'A trail of images that spawns and fades following the cursor.',
-    complexity: 'high', platform: 'desktop', categories: ['Photo / Gallery'],
-    code: [{ file: 'note.md', content: `Illustrative — search "Codrops image trail effect" (tympanus.net/codrops).
-On mousemove past a distance threshold, show the next image at the pointer, animate scale/opacity, recycle a pool.` }],
-  },
-  {
-    id: 'ext-vanilla-tilt', num: '↗', source: 'external', live: false,
-    title: 'vanilla-tilt.js', author: 'micku7zu', sourceUrl: 'https://micku7zu.github.io/vanilla-tilt.js/',
-    blurb: 'Dependency-free smooth 3D tilt on hover, with an optional gyroscope mode.',
-    complexity: 'easy', platform: 'any', categories: ['Motion / Device', 'Cards / Layout'],
-    code: [{ file: 'tilt.html', content: `<!-- github.com/micku7zu/vanilla-tilt.js -->
-<div data-tilt data-tilt-max="20" data-tilt-glare data-tilt-gyroscope="true">Card</div>
-<script src="vanilla-tilt.js"></script>
-<!-- or: VanillaTilt.init(document.querySelector('.card'), { max: 20, gyroscope: true }) -->` }],
-  },
-  {
-    id: 'ext-react-parallax-tilt', num: '↗', source: 'external', live: false,
+requestAnimationFrame(raf)` }] },
+  { id: 'ext-react-parallax-tilt', num: '↗', source: 'external', live: false,
     title: 'react-parallax-tilt', author: 'mkosir', sourceUrl: 'https://www.npmjs.com/package/react-parallax-tilt',
     blurb: 'React tilt/glare/parallax component with a gyroscope option for mobile.',
-    complexity: 'easy', platform: 'mobile', categories: ['Motion / Device'],
-    code: [{ file: 'Tilt.jsx', content: `// npm i react-parallax-tilt
-import Tilt from 'react-parallax-tilt'
+    complexity: 'easy', platform: 'mobile', categories: ['Motion / Device'], library: 'Library · npm i react-parallax-tilt',
+    code: [{ file: 'Tilt.jsx', content: `import Tilt from 'react-parallax-tilt'
 <Tilt gyroscope tiltMaxAngleX={20} tiltMaxAngleY={20} glareEnable>
   <div className="card">Tilts on hover AND device orientation</div>
-</Tilt>` }],
-  },
-  {
-    id: 'ext-parallax-js', num: '↗', source: 'external', live: false,
+</Tilt>` }] },
+  { id: 'ext-parallax-js', num: '↗', source: 'external', live: false,
     title: 'parallax.js', author: 'Matthew Wagerfield', sourceUrl: 'https://matthew.wagerfield.com/parallax/',
     blurb: 'Layered parallax that reacts to device orientation, falling back to the cursor.',
-    complexity: 'easy', platform: 'mobile', categories: ['Motion / Device', 'Hero / Header'],
-    code: [{ file: 'parallax.html', content: `<!-- github.com/wagerfield/parallax -->
-<ul class="scene">
+    complexity: 'easy', platform: 'mobile', categories: ['Motion / Device', 'Hero / Header'], library: 'Library · github.com/wagerfield/parallax',
+    code: [{ file: 'parallax.html', content: `<ul class="scene">
   <li class="layer" data-depth="0.2">...</li>
   <li class="layer" data-depth="0.6">...</li>
 </ul>
-<script>new Parallax(document.querySelector('.scene'))</script>` }],
-  },
-  {
-    id: 'ext-framer-layout', num: '↗', source: 'external', live: false,
+<script>new Parallax(document.querySelector('.scene'))</script>` }] },
+  { id: 'ext-splitting', num: '↗', source: 'external', live: false,
+    title: 'Splitting.js', author: 'Splitting.js', sourceUrl: 'https://splitting.js.org',
+    blurb: 'Splits text into chars/words/lines with CSS vars for index-based stagger.',
+    complexity: 'easy', platform: 'any', categories: ['Text Effect'], library: 'Library · npm i splitting',
+    code: [{ file: 'splitting.js', content: `Splitting()  // adds .char spans + --char-index CSS vars
+/* .char { animation: rise .5s calc(var(--char-index) * 40ms) both } */` }] },
+  { id: 'ext-framer-layout', num: '↗', source: 'external', live: false,
     title: 'Shared Layout Animation', author: 'Motion (Framer Motion)', sourceUrl: 'https://motion.dev',
     blurb: 'Magic-move elements between states/positions with a shared layoutId.',
-    complexity: 'mod', platform: 'any', categories: ['Cards / Layout'],
-    code: [{ file: 'layout.jsx', content: `// motion.dev — layout + layoutId do the FLIP for you
-import { motion } from 'framer-motion'
+    complexity: 'mod', platform: 'any', categories: ['Cards / Layout'], library: 'Library · npm i motion',
+    code: [{ file: 'layout.jsx', content: `import { motion } from 'framer-motion'
 {items.map(i => <motion.div key={i.id} layout layoutId={i.id} />)}
-// the selected item can share a layoutId with a detail view to morph between them` }],
-  },
-  {
-    id: 'ext-splitting', num: '↗', source: 'external', live: false,
-    title: 'Splitting.js', author: 'Splitting.js', sourceUrl: 'https://splitting.js.org',
-    blurb: 'Splits text into chars/words/lines with CSS vars for index-based stagger animations.',
-    complexity: 'easy', platform: 'any', categories: ['Text Effect'],
-    code: [{ file: 'splitting.js', content: `// splitting.js.org
-Splitting()  // adds .char spans + --char-index CSS vars
-/* .char { animation: rise .5s calc(var(--char-index) * 40ms) both } */` }],
-  },
+// share a layoutId between a card and its detail view to morph between them` }] },
 ]
 
 export const byId = Object.fromEntries(demos.map((d) => [d.id, d]))

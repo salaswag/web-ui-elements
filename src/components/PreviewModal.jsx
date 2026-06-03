@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getTags, addTag, removeTag } from '../userTags.js'
+import { getExtFiles } from '../ext/registry.js'
 import './preview-modal.css'
 
 const cxLabel = { easy: 'Easy', mod: 'Moderate', high: 'High' }
 
 export default function PreviewModal({ demo, onClose, onTagsChange }) {
-  const [showPrompt, setShowPrompt] = useState(false)
+  const [panel, setPanel] = useState(null) // 'prompt' | 'code' | null
   const [draft, setDraft] = useState('')
   const [copied, setCopied] = useState(false)
   const [fileIdx, setFileIdx] = useState(0)
@@ -21,17 +22,11 @@ export default function PreviewModal({ demo, onClose, onTagsChange }) {
   const tags = getTags(demo.id)
   const isExternal = demo.source === 'external'
   const live = demo.live !== false && !!demo.route
+  const files = demo.ext ? getExtFiles(demo.ext) : demo.code || []
 
-  const submitTag = (e) => {
-    e.preventDefault()
-    if (draft.trim()) { addTag(demo.id, draft); setDraft(''); onTagsChange?.() }
-  }
-  const copyText = async (text) => {
-    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500) } catch { /* ignore */ }
-  }
-
+  const submitTag = (e) => { e.preventDefault(); if (draft.trim()) { addTag(demo.id, draft); setDraft(''); onTagsChange?.() } }
+  const copyText = async (t) => { try { await navigator.clipboard.writeText(t); setCopied(true); setTimeout(() => setCopied(false), 1500) } catch { /* ignore */ } }
   const src = live ? `${window.location.origin}${window.location.pathname}#${demo.route}` : null
-  const files = demo.code || []
 
   return (
     <div className="pv-scrim" onClick={onClose}>
@@ -41,7 +36,7 @@ export default function PreviewModal({ demo, onClose, onTagsChange }) {
             <>
               <div className="pv-frame-bar">
                 <span className="pv-dot r" /><span className="pv-dot y" /><span className="pv-dot g" />
-                <span className="pv-frame-hint">live preview · scroll inside ↓</span>
+                <span className="pv-frame-hint">live preview{isExternal ? '' : ' · scroll inside ↓'}</span>
               </div>
               <iframe className="pv-iframe" src={src} title={demo.title} />
             </>
@@ -52,7 +47,7 @@ export default function PreviewModal({ demo, onClose, onTagsChange }) {
                   <button key={f.file} className={`pv-filetab ${i === fileIdx ? 'on' : ''}`} onClick={() => setFileIdx(i)}>{f.file}</button>
                 )) : <span className="pv-frame-hint">code</span>}
               </div>
-              <pre className="pv-codeblock">{files[fileIdx]?.content || 'No snippet — see source link.'}</pre>
+              <pre className="pv-codeblock">{files[fileIdx]?.content || 'See source link.'}</pre>
             </>
           )}
         </div>
@@ -62,17 +57,12 @@ export default function PreviewModal({ demo, onClose, onTagsChange }) {
           <div className="pv-meta">
             <span className="pv-num">{demo.num}{demo.variantLabel ? ` · ${demo.variantLabel}` : ''}</span>
             <span className={`cx cx-${demo.complexity}`}>{cxLabel[demo.complexity]}</span>
-            <span className={`pv-src-tag ${isExternal ? 'src-ext' : 'src-orig'}`}>
-              {isExternal ? '↗ External' : '★ Original'}
-            </span>
+            <span className={`pv-src-tag ${isExternal ? 'src-ext' : 'src-orig'}`}>{isExternal ? '↗ External' : '★ Original'}</span>
           </div>
           <h2 className="pv-title">{demo.title}</h2>
           <p className="pv-blurb">{demo.blurb}</p>
           {isExternal && (
-            <p className="pv-attr">
-              From <a href={demo.sourceUrl} target="_blank" rel="noreferrer">{demo.author} ↗</a>
-              {' '}· code shown is illustrative — see source for the full component.
-            </p>
+            <p className="pv-attr">From <a href={demo.sourceUrl} target="_blank" rel="noreferrer">{demo.author} ↗</a> · this is a clean reimplementation you can see + copy; visit the source for their full version.</p>
           )}
 
           <div className="pv-cats">
@@ -98,26 +88,28 @@ export default function PreviewModal({ demo, onClose, onTagsChange }) {
 
           <div className="pv-actions">
             {live && <Link to={demo.route} className="pv-open">Open full page ↗</Link>}
-            {isExternal && <a className="pv-open" href={demo.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
-            {demo.prompt && (
-              <button className="pv-prompt-btn" onClick={() => setShowPrompt((v) => !v)}>
-                {showPrompt ? 'Hide prompt' : 'View prompt'}
-              </button>
-            )}
-            {!demo.prompt && files.length > 0 && (
-              <button className="pv-prompt-btn" onClick={() => copyText(files[fileIdx].content)}>
-                {copied ? '✓ Copied' : 'Copy code'}
-              </button>
-            )}
+            {demo.prompt && <button className="pv-prompt-btn" onClick={() => setPanel(panel === 'prompt' ? null : 'prompt')}>{panel === 'prompt' ? 'Hide prompt' : 'View prompt'}</button>}
+            {files.length > 0 && <button className="pv-prompt-btn" onClick={() => setPanel(panel === 'code' ? null : 'code')}>{panel === 'code' ? 'Hide code' : 'View code'}</button>}
+            {isExternal && <a className="pv-prompt-btn" href={demo.sourceUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>Source ↗</a>}
           </div>
 
-          {showPrompt && demo.prompt && (
+          {panel === 'prompt' && demo.prompt && (
+            <div className="pv-prompt-wrap">
+              <div className="pv-prompt-bar"><span>{demo.library}</span><button onClick={() => copyText(demo.prompt)}>{copied ? '✓ Copied' : 'Copy'}</button></div>
+              <pre className="pv-prompt">{demo.prompt}</pre>
+            </div>
+          )}
+          {panel === 'code' && files.length > 0 && (
             <div className="pv-prompt-wrap">
               <div className="pv-prompt-bar">
-                <span>{demo.library}</span>
-                <button onClick={() => copyText(demo.prompt)}>{copied ? '✓ Copied' : 'Copy'}</button>
+                <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {files.map((f, i) => (
+                    <button key={f.file} className={`pv-filetab ${i === fileIdx ? 'on' : ''}`} onClick={() => setFileIdx(i)}>{f.file}</button>
+                  ))}
+                </span>
+                <button onClick={() => copyText(files[fileIdx].content)}>{copied ? '✓ Copied' : 'Copy'}</button>
               </div>
-              <pre className="pv-prompt">{demo.prompt}</pre>
+              <pre className="pv-prompt">{files[fileIdx]?.content}</pre>
             </div>
           )}
         </div>
