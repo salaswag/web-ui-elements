@@ -1,0 +1,125 @@
+/* Custom frequency dropdown — replaces native <select> */
+
+.fsel {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-ui);
+  z-index: 10;
+}
+.fsel--open { z-index: 300; }
+
+/* ── Trigger button ── */
+.fsel-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--c-line);
+  background: var(--c-card);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  text-align: left;
+}
+.fsel-trigger:focus { outline: none; }
+
+.fsel-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+.fsel-chevron {
+  width: 10px;
+  height: 6px;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  opacity: 0.5;
+}
+.fsel--open .fsel-chevron { transform: rotate(180deg); }
+
+/* ── State variants ── */
+.fsel--empty .fsel-trigger   { color: var(--c-grey); }
+.fsel--default .fsel-trigger { color: var(--c-muted); border-color: var(--c-line); }
+.fsel--plain .fsel-trigger   { color: var(--c-muted); }
+.fsel--user .fsel-trigger {
+  color: var(--purple);
+  border-color: var(--purple);
+  background: var(--c-purple-soft);
+  font-weight: 600;
+}
+.fsel--user .fsel-chevron { opacity: 0.7; }
+
+.fsel-trigger:hover {
+  border-color: var(--c-fg);
+  color: var(--c-fg);
+}
+.fsel--user .fsel-trigger:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+/* Open state ring */
+.fsel--open .fsel-trigger {
+  border-color: var(--purple);
+  color: var(--c-fg);
+}
+.fsel--user.fsel--open .fsel-trigger {
+  color: var(--purple);
+}
+
+/* ── Dropdown menu ── */
+.fsel-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 140px;
+  background: var(--c-card);
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 8px 24px -4px rgba(0,0,0,0.18), 0 2px 8px -2px rgba(0,0,0,0.12);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* ── Menu items ── */
+.fsel-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--c-muted);
+  background: none;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 9px;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  white-space: nowrap;
+}
+.fsel-item:hover { background: var(--c-soft); color: var(--c-fg); }
+.fsel-item--active {
+  background: var(--c-purple-soft);
+  color: var(--purple);
+  font-weight: 600;
+}
+.fsel-item--active:hover { background: var(--c-purple-soft); color: var(--purple); }
+
+/* ── Compact variant (home page cards) ── */
+.fsel--compact .fsel-trigger {
+  font-size: 11px;
+  padding: 3px 7px;
+}
+.fsel--compact .fsel-menu {
+  min-width: 130px;
+}
+.fsel--compact .fsel-item {
+  font-size: 11px;
+  padding: 5px 8px;
+}

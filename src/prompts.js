@@ -14,6 +14,7 @@ export const CATEGORIES = [
   'Motion / Device',
   'Global / Add-anywhere',
   'Scroll-driven',
+  'Section Transition',
 ]
 
 // Defaults applied to any demo missing them (keeps the 17 originals terse):
@@ -535,5 +536,350 @@ requestAnimationFrame(raf)` }] },
 {items.map(i => <motion.div key={i.id} layout layoutId={i.id} />)}
 // share a layoutId between a card and its detail view to morph between them` }] },
 ]
+
+// ── Section Transitions ─────────────────────────────────────────────────────
+
+demos.push(
+  // Live demos
+  { id: 'ext-fade-sections', num: '↗', source: 'external', live: true,
+    ext: 'fade-sections', route: '/x/fade-sections',
+    title: 'Fade + Slide Reveal Sections', author: 'Original',
+    blurb: 'Sections fade and slide upward into view via IntersectionObserver. Dot-nav on the right. Zero dependencies.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'IntersectionObserver (no deps)' },
+
+  { id: 'ext-clip-wipe', num: '↗', source: 'external', live: true,
+    ext: 'clip-wipe', route: '/x/clip-wipe',
+    title: 'Clip-Path Wipe Transition', author: 'Original',
+    blurb: 'Scroll drives a clip-path that sweeps each colored panel into view from the left edge. Pinned sticky container.',
+    complexity: 'mod', platform: 'desktop', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + clipPath' },
+
+  { id: 'ext-sticky-color-shift', num: '↗', source: 'external', live: true,
+    ext: 'sticky-color-shift', route: '/x/sticky-color-shift',
+    title: 'Sticky Color-Shift Sections', author: 'Original',
+    blurb: 'One pinned container whose background and text color cross-fades smoothly between stops as you scroll.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + lerp color' },
+
+  // Reference entries
+  { id: 'ext-barba', num: '↗', source: 'external', live: false,
+    title: 'Barba.js', author: 'barba.js', sourceUrl: 'https://barba.js.org',
+    blurb: 'Page-level transition framework — hooks into navigation to animate between views with GSAP, Three.js, etc.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition'],
+    library: 'Library · npm i @barba/core',
+    code: [{ file: 'barba.js', content: `barba.init({
+  transitions: [{
+    name: 'fade',
+    leave({ current }) { return gsap.to(current.container, { opacity: 0 }) },
+    enter({ next })    { return gsap.from(next.container,  { opacity: 0 }) },
+  }]
+})` }] },
+
+  { id: 'ext-swup', num: '↗', source: 'external', live: false,
+    title: 'Swup', author: 'swup.js', sourceUrl: 'https://swup.js.org',
+    blurb: 'Lightweight page-transition library. Add a CSS class on your main container and get instant animated transitions.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition'],
+    library: 'Library · npm i swup',
+    code: [{ file: 'swup.html', content: `<!-- Add id="swup" to your main content container -->
+<main id="swup" class="transition-fade">...</main>
+
+/* CSS (transition-fade plugin) */
+.transition-fade { transition: opacity .4s; opacity: 1; }
+html.is-animating .transition-fade { opacity: 0; }` }] },
+
+  { id: 'ext-gsap-pagetransition', num: '↗', source: 'external', live: false,
+    title: 'GSAP Page Wipe', author: 'GreenSock', sourceUrl: 'https://gsap.com/docs/v3/Plugins/Flip/',
+    blurb: 'Overlay a full-screen div that slides/fades on navigation, then reveals the new page. Clean GSAP approach.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition'],
+    library: 'GSAP · gsap.com',
+    code: [{ file: 'page-wipe.js', content: `// Curtain wipe between pages
+const curtain = document.querySelector('.curtain')
+
+async function navigateTo(url) {
+  await gsap.to(curtain, { scaleX: 1, transformOrigin: 'left', duration: .5 })
+  window.location.href = url
+}
+
+// On new page load
+gsap.from('.curtain', { scaleX: 1, transformOrigin: 'right',
+  duration: .5, onComplete: () => curtain.style.display = 'none' })` }] },
+)
+
+// ── More Section Transition effects ─────────────────────────────────────────
+
+demos.push(
+  // ── Live interactive demos ──────────────────────────────────────────────
+
+  { id: 'ext-horizontal-scroll', num: '↗', source: 'external', live: true,
+    ext: 'horizontal-scroll', route: '/x/horizontal-scroll',
+    title: 'Horizontal Scroll Sequence', author: 'GSAP ShowCase',
+    blurb: 'Pinned container scrolls a horizontal track of full-screen panels. Pip indicator tracks progress.',
+    complexity: 'mod', platform: 'desktop', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger pin + horizontal translateX' },
+
+  { id: 'ext-zoom-portal', num: '↗', source: 'external', live: true,
+    ext: 'zoom-portal', route: '/x/zoom-portal',
+    title: 'Zoom Portal Reveal', author: 'Awwwards pattern',
+    blurb: 'A circle at the bottom of each section scales up on scroll until it fills the screen, revealing the next color.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + scale' },
+
+  { id: 'ext-curtain-reveal', num: '↗', source: 'external', live: true,
+    ext: 'curtain-reveal', route: '/x/curtain-reveal',
+    title: 'Layered Curtain Reveal', author: 'Codrops pattern',
+    blurb: 'Three staggered color overlays wipe upward on scroll, unveiling the next section in a theatrical sequence.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + translateY stagger' },
+
+  { id: 'ext-word-stagger', num: '↗', source: 'external', live: true,
+    ext: 'word-stagger', route: '/x/word-stagger',
+    title: 'Word Stagger Reveal', author: 'GSAP SplitText pattern',
+    blurb: 'Heading words rise up from a clipped baseline with a stagger as the section enters the viewport.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Text Effect', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger + word-split stagger' },
+
+  { id: 'ext-stagger-grid', num: '↗', source: 'external', live: true,
+    ext: 'stagger-grid', route: '/x/stagger-grid',
+    title: 'Stagger Grid Cascade', author: 'GSAP pattern',
+    blurb: 'Grid cards cascade into view with a stagger offset — each one translating up and fading in.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Cards / Layout', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger batch stagger' },
+
+  { id: 'ext-scroll-snap', num: '↗', source: 'external', live: true,
+    ext: 'scroll-snap', route: '/x/scroll-snap',
+    title: 'CSS Scroll Snap Sections', author: 'CSS pattern',
+    blurb: 'scroll-snap-type forces full-page snapping; IntersectionObserver fires a staggered entrance when each section locks.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'CSS scroll-snap + IntersectionObserver' },
+
+  { id: 'ext-morph-clip', num: '↗', source: 'external', live: true,
+    ext: 'morph-clip', route: '/x/morph-clip',
+    title: 'Circle Morph Reveal', author: 'Codrops pattern',
+    blurb: 'A circular clip-path starts at 0% in the center and expands to 150% on scroll, morphing to fill the screen.',
+    complexity: 'mod', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + clip-path circle' },
+
+  { id: 'ext-flip-sections', num: '↗', source: 'external', live: true,
+    ext: 'flip-sections', route: '/x/flip-sections',
+    title: '3D Flip Card Sections', author: 'GSAP 3D pattern',
+    blurb: 'Feature cards rotate in from 45° on their X axis as they enter the viewport — perspective gives real depth.',
+    complexity: 'easy', platform: 'desktop', categories: ['Section Transition', 'Cards / Layout', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger + rotateX perspective' },
+
+  { id: 'ext-parallax-depth', num: '↗', source: 'external', live: true,
+    ext: 'parallax-depth', route: '/x/parallax-depth',
+    title: 'Multi-Layer Parallax Depth', author: 'Classic parallax',
+    blurb: 'Text and gradient elements move at different speeds on scroll, creating the illusion of 3D layered depth.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Scroll-driven', 'Hero / Header'],
+    library: 'Vanilla JS requestAnimationFrame' },
+
+  { id: 'ext-count-up', num: '↗', source: 'external', live: true,
+    ext: 'count-up-reveal', route: '/x/count-up-reveal',
+    title: 'Count-Up Stats Reveal', author: 'GSAP pattern',
+    blurb: 'Statistics grid fades in with a stagger, then each number counts up to its value via GSAP textContent tween.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Text Effect', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger + textContent snap' },
+
+  { id: 'ext-view-transition', num: '↗', source: 'external', live: true,
+    ext: 'view-transition', route: '/x/view-transition',
+    title: 'View Transitions API', author: 'Chrome / MDN',
+    blurb: 'Native browser transitions between views via document.startViewTransition(). Slide-in/out via ::view-transition-* pseudo-elements.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition'],
+    library: 'Native browser API · Chrome 111+' },
+
+  // ── Library references ──────────────────────────────────────────────────
+
+  { id: 'ext-locomotive', num: '↗', source: 'external', live: false,
+    title: 'Locomotive Scroll', author: 'locomotivemtl', sourceUrl: 'https://locomotivescroll.com',
+    blurb: 'Smooth scroll with speed / direction / position data-attributes. Pairs perfectly with GSAP ScrollTrigger.',
+    complexity: 'easy', platform: 'desktop', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'Library · npm i locomotive-scroll',
+    code: [{ file: 'locomotive.js', content: `import LocomotiveScroll from 'locomotive-scroll'
+
+const scroll = new LocomotiveScroll({
+  el: document.querySelector('[data-scroll-container]'),
+  smooth: true,
+  lerp: 0.08,
+})
+
+// Sync with GSAP ScrollTrigger
+ScrollTrigger.scrollerProxy('[data-scroll-container]', {
+  scrollTop(v) { return arguments.length ? scroll.scrollTo(v, 0, 0) : scroll.scroll.instance.scroll.y },
+  getBoundingClientRect() { return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight } },
+})
+scroll.on('scroll', ScrollTrigger.update)` }] },
+
+  { id: 'ext-sheryjs', num: '↗', source: 'external', live: false,
+    title: 'Shery.js WebGL Effects', author: 'aayushchouhan24', sourceUrl: 'https://sheryjs.com',
+    blurb: 'WebGL-powered image distortion, noise dissolves, and shader effects on scroll. Two lines to add to any element.',
+    complexity: 'mod', platform: 'desktop', categories: ['Section Transition', 'Photo / Gallery'],
+    library: 'Library · npm i sheryjs',
+    code: [{ file: 'shery.js', content: `import Shery from 'sheryjs'
+
+// Distortion on hover + scroll
+Shery.imageEffect('.hero-image', {
+  style: 5,          // noise/fluid distortion
+  config: {
+    uFrequencyX: { value: 10 },
+    uFrequencyY: { value: 10 },
+    uAmplitude:  { value: 0.3 },
+  },
+  gooey: true,
+})
+
+// Mouse-following distortion
+Shery.mouseFollower({ skewSmoothness: 8 })` }] },
+
+  { id: 'ext-motionone', num: '↗', source: 'external', live: false,
+    title: 'Motion One Scroll', author: 'Matt Perry', sourceUrl: 'https://motion.dev',
+    blurb: 'Smallest production animation lib (3KB). scroll() function links any animation to scroll position — no GSAP needed.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'Library · npm i motion',
+    code: [{ file: 'motion-scroll.js', content: `import { animate, scroll } from 'motion'
+
+// Scroll-linked animation (progress 0→1 as section enters/exits)
+scroll(
+  animate('.hero', { opacity: [0, 1], y: [40, 0] }),
+  { target: document.querySelector('.section'), offset: ['start end', 'end start'] }
+)
+
+// Spring-physics entrance
+animate('.card', { opacity: 1, x: 0 }, { type: 'spring', stiffness: 300, damping: 24 })` }] },
+
+  { id: 'ext-theatrejs', num: '↗', source: 'external', live: false,
+    title: 'Theatre.js Scroll Timeline', author: 'Aria Minaei', sourceUrl: 'https://www.theatrejs.com',
+    blurb: 'Studio-grade keyframe editor with scroll scrubbing. Design animations visually, export to code. For complex scroll stories.',
+    complexity: 'high', platform: 'desktop', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'Library · npm i @theatre/core @theatre/studio',
+    code: [{ file: 'theatre.js', content: `import * as core from '@theatre/core'
+import studio from '@theatre/studio'
+
+studio.initialize()
+
+const proj  = core.getProject('My Project')
+const sheet = proj.sheet('Scroll Scene')
+const obj   = sheet.object('Hero', { opacity: core.types.number(0, { range: [0,1] }) })
+
+// Tie Theatre's sequence position to scroll
+window.addEventListener('scroll', () => {
+  const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight)
+  sheet.sequence.position = progress * sheet.sequence.duration
+})` }] },
+
+  { id: 'ext-css-scroll-driven', num: '↗', source: 'external', live: false,
+    title: 'CSS Scroll-Driven Animations', author: 'Chrome for Developers', sourceUrl: 'https://developer.chrome.com/docs/css-ui/scroll-driven-animations',
+    blurb: 'Zero-JS scroll animations with animation-timeline: scroll() and view(). Progress bars, reveals, stickers — all in CSS.',
+    complexity: 'easy', platform: 'any', categories: ['Section Transition', 'Scroll-driven'],
+    library: 'Native CSS · Chrome 115+ / Firefox 121+',
+    code: [{ file: 'scroll-driven.css', content: `/* Progress bar that fills as you scroll the page */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: #7c3aed;
+  transform-origin: left;
+  animation: grow linear both;
+  animation-timeline: scroll(root);
+}
+@keyframes grow { from { scaleX: 0 } to { scaleX: 1 } }
+
+/* Fade + slide in as element enters the viewport */
+.reveal {
+  animation: reveal-up linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 40%;
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(40px) }
+  to   { opacity: 1; transform: translateY(0) }
+}` }] },
+)
+
+// ── New Hero / Header effects ─────────────────────────────────────────────
+demos.push(
+  { id: 'ext-gradient-orb-bg', num: '↗', source: 'external', live: true,
+    ext: 'gradient-orb-bg', route: '/x/gradient-orb-bg',
+    title: 'Gradient Orb Background', author: 'Linear / Vercel pattern',
+    blurb: 'Floating blurred color orbs on a dark hero — the ambient glow from Linear, Stripe, Vercel.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Global / Add-anywhere'],
+    library: 'Pure CSS keyframes' },
+
+  { id: 'ext-hero-countup', num: '↗', source: 'external', live: true,
+    ext: 'hero-countup', route: '/x/hero-countup',
+    title: 'Stats Count-Up Hero', author: 'SaaS pattern',
+    blurb: 'Hero with a stat strip — numbers count up to their target value when scrolled into view.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger + textContent snap' },
+
+  { id: 'ext-gradient-text-hero', num: '↗', source: 'external', live: true,
+    ext: 'gradient-text-hero', route: '/x/gradient-text-hero',
+    title: 'Gradient Text + Word Swap', author: 'Apple / Linear pattern',
+    blurb: 'Headline gradient sweeps through text while one keyword cycles through alternatives.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Text Effect'],
+    library: 'Pure CSS animation' },
+
+  { id: 'ext-glassmorphism-hero', num: '↗', source: 'external', live: true,
+    ext: 'glassmorphism-hero', route: '/x/glassmorphism-hero',
+    title: 'Glassmorphism Card Hero', author: 'Notion / Framer pattern',
+    blurb: 'Split-layout hero with a frosted glass product card floating on blurred gradient blobs.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Cards / Layout'],
+    library: 'Pure CSS backdrop-filter' },
+
+  { id: 'ext-bento-reveal', num: '↗', source: 'external', live: true,
+    ext: 'bento-reveal', route: '/x/bento-reveal',
+    title: 'Bento Grid Reveal', author: 'Apple / Raycast pattern',
+    blurb: 'Feature cards in a bento grid, each sliding in on scroll with GSAP stagger.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Cards / Layout', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger' },
+
+  { id: 'ext-terminal-hero', num: '↗', source: 'external', live: true,
+    ext: 'terminal-hero', route: '/x/terminal-hero',
+    title: 'Terminal Typing Hero', author: 'Dev-tool pattern',
+    blurb: 'macOS-style terminal window that types out commands one character at a time in the hero.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Text Effect'],
+    library: 'Vanilla JS character loop' },
+
+  { id: 'ext-mouse-gradient-hero', num: '↗', source: 'external', live: true,
+    ext: 'mouse-gradient-hero', route: '/x/mouse-gradient-hero',
+    title: 'Mouse-Tracked Gradient', author: 'Lusion / Basement pattern',
+    blurb: 'Radial color glow follows the cursor across a dark hero — tactile, alive, zero deps.',
+    complexity: 'easy', platform: 'desktop', categories: ['Hero / Header'],
+    library: 'Vanilla JS mousemove' },
+
+  { id: 'ext-word-rotate-hero', num: '↗', source: 'external', live: true,
+    ext: 'word-rotate-hero', route: '/x/word-rotate-hero',
+    title: 'Word Rotate Hero', author: 'Common SaaS pattern',
+    blurb: 'A single keyword in the headline slides through alternatives — clean CSS transitions.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Text Effect'],
+    library: 'React useState + CSS transition' },
+
+  { id: 'ext-grain-texture-hero', num: '↗', source: 'external', live: true,
+    ext: 'grain-texture-hero', route: '/x/grain-texture-hero',
+    title: 'Grain Texture Hero', author: 'Agency / premium pattern',
+    blurb: 'SVG noise grain over a dark gradient adds tactile depth without any distraction.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Global / Add-anywhere'],
+    library: 'Pure CSS (SVG data URI noise)' },
+
+  { id: 'ext-hero-scroll-split', num: '↗', source: 'external', live: true,
+    ext: 'hero-scroll-split', route: '/x/hero-scroll-split',
+    title: 'Headline Scroll Split', author: 'Awwwards pattern',
+    blurb: 'Headline top half flies up and bottom drops down on scroll — pinned, scrubbed GSAP.',
+    complexity: 'mod', platform: 'desktop', categories: ['Hero / Header', 'Scroll-driven'],
+    library: 'GSAP ScrollTrigger scrub + pin' },
+
+  { id: 'ext-floating-nav-hero', num: '↗', source: 'external', live: true,
+    ext: 'floating-nav-hero', route: '/x/floating-nav-hero',
+    title: 'Scroll-Aware Floating Nav', author: 'Universal SaaS pattern',
+    blurb: 'Nav starts transparent, gains backdrop-blur and border once the hero scrolls out of view.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Global / Add-anywhere'],
+    library: 'IntersectionObserver' },
+
+  { id: 'ext-scroll-fade-sections', num: '↗', source: 'external', live: true,
+    ext: 'scroll-fade-sections', route: '/x/scroll-fade-sections',
+    title: 'Scroll Fade + Slide Sections', author: 'Universal pattern',
+    blurb: 'Content blocks fade and slide up as they enter the viewport — the baseline reveal every page uses.',
+    complexity: 'easy', platform: 'any', categories: ['Hero / Header', 'Scroll-driven'],
+    library: 'IntersectionObserver + CSS transition' },
+)
 
 export const byId = Object.fromEntries(demos.map((d) => [d.id, d]))

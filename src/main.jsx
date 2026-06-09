@@ -6,7 +6,10 @@ import { init as initTheme } from './theme.js'
 
 initTheme()
 
+import AppShell from './components/AppShell.jsx'
 import Home from './pages/Home.jsx'
+import EffectPage from './pages/EffectPage.jsx'
+
 import StickyCard from './pages/StickyCard.jsx'
 import VaultHero from './pages/VaultHero.jsx'
 import WordFill from './pages/WordFill.jsx'
@@ -31,7 +34,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* AppShell-wrapped browsing routes */}
+        <Route element={<AppShell />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/effects/:id" element={<EffectPage />} />
+        </Route>
+
+        {/* Bare routes — iframe targets, no shell */}
         <Route path="/sticky-card" element={<StickyCard />} />
         <Route path="/vault-hero" element={<VaultHero />} />
         <Route path="/word-fill" element={<WordFill />} />
