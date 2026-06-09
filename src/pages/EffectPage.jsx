@@ -1,11 +1,21 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { byId, demos } from '../prompts.js'
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { byId, demos, CATEGORIES } from '../prompts.js'
 import { getExtFiles } from '../ext/registry.js'
 import { getEffectiveFreq, isUserSet, setFreq } from '../lib/userFrequency.js'
 import { isStarred, toggleStar } from '../lib/userStars.js'
+import { isArchived, toggleArchive } from '../lib/userArchive.js'
 import FrequencySelect from '../components/FrequencySelect.jsx'
 import './effect-page.css'
+
+const ArchiveIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="4" rx="1" />
+    <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" />
+    <path d="M10 12h4" />
+  </svg>
+)
 
 const PAGE_SOURCES = import.meta.glob('./*.jsx', { query: '?raw', import: 'default', eager: true })
 
@@ -22,12 +32,14 @@ const liveList = demos.filter((d) => d.route && d.live !== false)
 export default function EffectPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const demo = byId[id]
   const [tab, setTab] = useState('preview')
   const [copied, setCopied] = useState(false)
   const [freq, setFreqState] = useState(() => getEffectiveFreq(id))
   const [userSet, setUserSet] = useState(() => isUserSet(id))
   const [starred, setStarred] = useState(() => isStarred(id))
+  const [archived, setArchived] = useState(() => isArchived(id))
   const [fileIdx, setFileIdx] = useState(0)
 
   // sync state when id changes
@@ -35,6 +47,7 @@ export default function EffectPage() {
     setFreqState(getEffectiveFreq(id))
     setUserSet(isUserSet(id))
     setStarred(isStarred(id))
+    setArchived(isArchived(id))
     setTab('preview')
   }, [id])
 
@@ -47,9 +60,20 @@ export default function EffectPage() {
     )
   }
 
-  const idx = liveList.findIndex((d) => d.id === id)
-  const prevDemo = idx > 0 ? liveList[idx - 1] : null
-  const nextDemo = idx < liveList.length - 1 ? liveList[idx + 1] : null
+  // Prev/Next walk WITHIN the category you're browsing. The category is PINNED in
+  // the URL (?cat=) by whatever you clicked from (a sidebar group or a hub card),
+  // so it stays stable across Next/Next/Next instead of being re-derived per effect
+  // (which made navigation jump categories). Falls back to the effect's first
+  // matching category when no cat is in the URL (e.g. a direct link).
+  const catParam = params.get('cat')
+  const activeCat = (catParam && demo.categories.includes(catParam))
+    ? catParam
+    : CATEGORIES.find((c) => demo.categories.includes(c))
+  const navList = activeCat ? liveList.filter((d) => d.categories.includes(activeCat)) : liveList
+  const catQuery = activeCat ? `?cat=${encodeURIComponent(activeCat)}` : ''
+  const idx = navList.findIndex((d) => d.id === id)
+  const prevDemo = idx > 0 ? navList[idx - 1] : null
+  const nextDemo = idx < navList.length - 1 ? navList[idx + 1] : null
 
   const isExternal = demo.source === 'external'
   const pageName = idToPageFile(demo.id)
@@ -71,7 +95,9 @@ export default function EffectPage() {
     setUserSet(!!v)
   }
 
-  const tabs = ['preview', 'code', ...(demo.prompt || isExternal ? ['prompt'] : [])]
+  // External effects have no page file — their real source lives in the "Source Code"
+  // tab (the 'prompt' tab), so the empty "Code" tab is dropped for them.
+  const tabs = ['preview', ...(isExternal ? [] : ['code']), ...(demo.prompt || isExternal ? ['prompt'] : [])]
 
   return (
     <div className="ep">
@@ -87,16 +113,16 @@ export default function EffectPage() {
           <button
             className="ep-nav-btn"
             disabled={!prevDemo}
-            onClick={() => prevDemo && navigate(`/effects/${prevDemo.id}`)}
-            title={prevDemo ? prevDemo.title : 'First effect'}
+            onClick={() => prevDemo && navigate(`/effects/${prevDemo.id}${catQuery}`)}
+            title={prevDemo ? prevDemo.title : 'First in category'}
           >
             ← Prev
           </button>
           <button
             className="ep-nav-btn"
             disabled={!nextDemo}
-            onClick={() => nextDemo && navigate(`/effects/${nextDemo.id}`)}
-            title={nextDemo ? nextDemo.title : 'Last effect'}
+            onClick={() => nextDemo && navigate(`/effects/${nextDemo.id}${catQuery}`)}
+            title={nextDemo ? nextDemo.title : 'Last in category'}
           >
             Next →
           </button>
@@ -106,6 +132,14 @@ export default function EffectPage() {
             title={starred ? 'Unstar this effect' : 'Star this effect'}
           >
             {starred ? '★' : '☆'}
+          </button>
+          <button
+            className={`ep-archive-btn ${archived ? 'on' : ''}`}
+            onClick={() => { toggleArchive(id); setArchived(isArchived(id)) }}
+            title={archived ? 'Unarchive (show in sidebar & hub again)' : 'Archive (hide from sidebar & hub)'}
+            aria-label="Archive this effect"
+          >
+            <ArchiveIcon />
           </button>
           <a href={iframeSrc} target="_blank" rel="noreferrer" className="ep-open-btn">
             ↗

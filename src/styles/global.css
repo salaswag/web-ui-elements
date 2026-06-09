@@ -90,6 +90,27 @@ a { color: inherit; text-decoration: none; }
 .hub-hero {
   margin-bottom: 40px;
 }
+.hub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--purple);
+  background: var(--c-purple-soft);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  padding: 5px 12px;
+  border-radius: 99px;
+  margin-bottom: 16px;
+}
+.hub-grad {
+  background: linear-gradient(100deg, #7c3aed, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 .hub-eyebrow {
   display: inline-block;
   font-family: var(--font-ui);
@@ -169,6 +190,7 @@ a { color: inherit; text-decoration: none; }
 .hub-chip.hub-chip-clear   { color: var(--c-grey); }
 .hub-chip.hub-chip-star    { }
 .hub-chip.hub-chip-star.on { background: rgba(245,158,11,0.12); color: #f59e0b; border-color: #f59e0b; }
+.hub-chip.hub-chip-archive.on { background: var(--c-purple-soft); color: var(--purple); border-color: var(--purple); }
 
 .hub-sort-wrap {
   display: inline-flex;
@@ -417,6 +439,21 @@ a { color: inherit; text-decoration: none; }
 }
 .hub-card-star:hover { color: #f59e0b; transform: scale(1.15); }
 .hub-card-star.on { color: #f59e0b; }
+
+.hub-card-archive {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  color: var(--c-grey);
+  transition: color 0.12s, transform 0.12s;
+  flex-shrink: 0;
+}
+.hub-card-archive:hover { color: var(--purple); transform: scale(1.15); }
+.hub-card-archive.on { color: var(--purple); }
 
 .hub-freq-clear {
   font-size: 12px;

@@ -76,15 +76,16 @@ export default function WordRotateHero() {
   const [phase, setPhase] = useState('enter')
 
   useEffect(() => {
+    let swap
     const timer = setInterval(() => {
       setPhase('exit')
-      setTimeout(() => {
+      swap = setTimeout(() => {
         setIdx((i) => (i + 1) % WORDS.length)
         setPhase('enter-from')
         requestAnimationFrame(() => requestAnimationFrame(() => setPhase('enter')))
       }, 380)
     }, 2400)
-    return () => clearInterval(timer)
+    return () => { clearInterval(timer); clearTimeout(swap) }
   }, [])
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import DemoChrome from '../components/DemoChrome.jsx'
 import './tilt-shimmer.css'
 
@@ -7,7 +7,7 @@ export default function TiltShimmer() {
   const card = useRef(null)
   const [needPerm, setNeedPerm] = useState(false)
 
-  const setTilt = (rx, ry) => {
+  const setTilt = useCallback((rx, ry) => {
     const el = card.current
     if (!el) return
     el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`
@@ -15,7 +15,14 @@ export default function TiltShimmer() {
     const sy = 50 - rx * 2.2
     el.style.setProperty('--sx', `${sx}%`)
     el.style.setProperty('--sy', `${sy}%`)
-  }
+  }, [])
+
+  // Stable handler reference so enableMotion can register it AND the effect cleanup
+  // can remove it.
+  const onOrient = useCallback((e) => setTilt(
+    Math.max(-20, Math.min(20, ((e.beta || 0) - 45) / 2)),
+    Math.max(-20, Math.min(20, (e.gamma || 0) / 2)),
+  ), [setTilt])
 
   useEffect(() => {
     const onMouse = (e) => {
@@ -24,10 +31,6 @@ export default function TiltShimmer() {
       const py = (e.clientY - (r.top + r.height / 2)) / r.height
       setTilt(-py * 18, px * 18)
     }
-    const onOrient = (e) => setTilt(
-      Math.max(-20, Math.min(20, ((e.beta || 0) - 45) / 2)),
-      Math.max(-20, Math.min(20, (e.gamma || 0) / 2)),
-    )
     window.addEventListener('mousemove', onMouse)
     const DOE = window.DeviceOrientationEvent
     if (DOE && typeof DOE.requestPermission === 'function') setNeedPerm(true)
@@ -36,14 +39,12 @@ export default function TiltShimmer() {
       window.removeEventListener('mousemove', onMouse)
       window.removeEventListener('deviceorientation', onOrient)
     }
-  }, [])
+  }, [setTilt, onOrient])
 
   const enableMotion = async () => {
     try {
       if ((await window.DeviceOrientationEvent.requestPermission()) === 'granted') {
-        window.addEventListener('deviceorientation', (e) =>
-          setTilt(Math.max(-20, Math.min(20, ((e.beta || 0) - 45) / 2)), Math.max(-20, Math.min(20, (e.gamma || 0) / 2))),
-        )
+        window.addEventListener('deviceorientation', onOrient)
         setNeedPerm(false)
       }
     } catch { /* ignore */ }

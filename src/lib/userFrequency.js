@@ -8,7 +8,7 @@ const listeners = new Set()
 
 export const FREQ_OPTIONS = [
   { value: 'everywhere', label: 'Use Everywhere' },
-  { value: 'often',      label: 'Used Often' },
+  { value: 'often',      label: 'Use Often' },
   { value: 'rare',       label: 'Rare' },
   { value: 'superrare',  label: 'Super Rare' },
 ]

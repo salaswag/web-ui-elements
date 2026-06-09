@@ -4,6 +4,7 @@ import { demos, CATEGORIES } from '../prompts.js'
 import { getPref, setTheme } from '../theme.js'
 import { getEffectiveFreq, subscribe as subFreq } from '../lib/userFrequency.js'
 import { isStarred, subscribe as subStars } from '../lib/userStars.js'
+import { isArchived, subscribe as subArch } from '../lib/userArchive.js'
 import './app-sidebar.css'
 
 const FREQ_RANK = { everywhere: 0, often: 1, rare: 2, superrare: 3, null: 4 }
@@ -32,6 +33,22 @@ const FREQ_OPTS = [
 
 const inIframe = typeof window !== 'undefined' && window.self !== window.top
 
+// Brand mark: a gradient tile with a double "scroll-down" chevron — a nod to the
+// scroll-driven theme of the library.
+const Logo = () => (
+  <svg className="asb-logo" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="asb-lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#7c3aed" />
+        <stop offset="1" stopColor="#22d3ee" />
+      </linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="9" fill="url(#asb-lg)" />
+    <path d="M10 12.5 L16 18 L22 12.5" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10 18.5 L16 24 L22 18.5" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity=".5" />
+  </svg>
+)
+
 export default function AppSidebar() {
   const loc = useLocation()
   const [theme, setThemePref] = useState(() => getPref())
@@ -45,7 +62,8 @@ export default function AppSidebar() {
   useEffect(() => {
     const u1 = subFreq(()  => setTick((t) => t + 1))
     const u2 = subStars(() => setTick((t) => t + 1))
-    return () => { u1(); u2() }
+    const u3 = subArch(()  => setTick((t) => t + 1))
+    return () => { u1(); u2(); u3() }
   }, [])
 
   const activeId = loc.pathname.startsWith('/effects/')
@@ -70,12 +88,12 @@ export default function AppSidebar() {
 
   const groups = CATEGORIES.map((cat) => {
     if (sideCats.size > 0 && !sideCats.has(cat)) return { cat, items: [] }
-    let items = demos.filter((d) => d.categories.includes(cat) && d.route && d.live !== false)
+    let items = demos.filter((d) => d.categories.includes(cat) && d.route && d.live !== false && !isArchived(d.id))
     if (sideFreq !== 'all') items = items.filter((d) => getEffectiveFreq(d.id) === sideFreq)
     return { cat, items: sortItems(items, sideSort) }
   }).filter((g) => g.items.length)
 
-  const totalCount = demos.filter((d) => d.route && d.live !== false).length
+  const totalCount = demos.filter((d) => d.route && d.live !== false && !isArchived(d.id)).length
   const visibleCount = groups.reduce((acc, g) => acc + g.items.length, 0)
   const isFiltered = sideCats.size > 0 || sideFreq !== 'all'
 
@@ -83,7 +101,7 @@ export default function AppSidebar() {
     <nav className="asb-nav">
       <div className="asb-head">
         <Link to="/" className="asb-brand" onClick={() => setMobileOpen(false)}>
-          <span className="asb-brand-icon">✦</span>
+          <Logo />
           <span className="asb-brand-text">Effects Library</span>
         </Link>
         <button className="asb-collapse-btn" onClick={() => setCollapsed(true)} title="Collapse sidebar">◀</button>
@@ -187,7 +205,7 @@ export default function AppSidebar() {
                   {g.items.map((d) => (
                     <Link
                       key={d.id}
-                      to={`/effects/${d.id}`}
+                      to={`/effects/${d.id}?cat=${encodeURIComponent(g.cat)}`}
                       className={`asb-link ${activeId === d.id ? 'on' : ''}`}
                       onClick={() => setMobileOpen(false)}
                     >

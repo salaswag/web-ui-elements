@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import DemoChrome from '../components/DemoChrome.jsx'
 import './gyro-parallax.css'
 
@@ -16,28 +16,29 @@ export default function GyroParallax() {
   const tx = useRef(0)
   const ty = useRef(0)
 
-  const apply = () => {
+  const apply = useCallback(() => {
     const els = root.current?.querySelectorAll('.gp-layer') || []
     els.forEach((el) => {
       const d = Number(el.dataset.depth)
       el.style.transform = `translate3d(${tx.current * d}px, ${ty.current * d}px, 0)`
     })
-  }
+  }, [])
+
+  // Stable handler reference so enableMotion can register it AND the effect cleanup
+  // can remove it (gamma: left-right -90..90, beta: front-back -180..180).
+  const onOrient = useCallback((e) => {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
+    tx.current = clamp((e.gamma || 0) / 45, -1, 1)
+    ty.current = clamp(((e.beta || 0) - 45) / 45, -1, 1)
+    apply()
+  }, [apply])
 
   useEffect(() => {
-    const onOrient = (e) => {
-      // gamma: left-right (-90..90), beta: front-back (-180..180)
-      tx.current = gsapClamp((e.gamma || 0) / 45, -1, 1)
-      ty.current = gsapClamp(((e.beta || 0) - 45) / 45, -1, 1)
-      apply()
-    }
     const onMouse = (e) => {
       tx.current = (e.clientX / window.innerWidth - 0.5) * 2
       ty.current = (e.clientY / window.innerHeight - 0.5) * 2
       apply()
     }
-    function gsapClamp(v, a, b) { return Math.max(a, Math.min(b, v)) }
-
     window.addEventListener('mousemove', onMouse)
     // iOS 13+ needs a user-gesture permission; flag it
     const DOE = window.DeviceOrientationEvent
@@ -50,17 +51,13 @@ export default function GyroParallax() {
       window.removeEventListener('mousemove', onMouse)
       window.removeEventListener('deviceorientation', onOrient)
     }
-  }, [])
+  }, [apply, onOrient])
 
   const enableMotion = async () => {
     try {
       const res = await window.DeviceOrientationEvent.requestPermission()
       if (res === 'granted') {
-        window.addEventListener('deviceorientation', (e) => {
-          tx.current = Math.max(-1, Math.min(1, (e.gamma || 0) / 45))
-          ty.current = Math.max(-1, Math.min(1, ((e.beta || 0) - 45) / 45))
-          apply()
-        })
+        window.addEventListener('deviceorientation', onOrient)
         setNeedPerm(false)
       }
     } catch { /* ignore */ }

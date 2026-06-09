@@ -65,6 +65,22 @@
 }
 .ep-star-btn:hover { border-color: #f59e0b; color: #f59e0b; }
 .ep-star-btn.on { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.1); }
+.ep-archive-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--c-line);
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  line-height: 1;
+  color: var(--c-grey);
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+.ep-archive-btn:hover { border-color: var(--purple); color: var(--purple); }
+.ep-archive-btn.on { border-color: var(--purple); color: var(--purple); background: var(--c-purple-soft); }
 .ep-nav-btn {
   font-family: var(--font-ui);
   font-size: 12px;
